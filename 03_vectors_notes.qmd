@@ -1,0 +1,176 @@
+---
+title: "Chapter 3: Vectors - Notes"
+format: 
+  html:
+    number-sections: true
+    theme: sandstone
+    code-fold: false
+    toc: true
+    link-external-newwindow: true
+---
+
+## Atomic Vectors 
+### Basics Recap
+
+- There are four types of atomic vectors:
+
+```{mermaid}
+flowchart LR
+  Vector --> Atomic
+  Atomic --> Numeric
+  Numeric --> Integer
+  Integer -.-> factor
+  Numeric --> Double
+  Double --> Date
+  Double --> 
+  
+  Atomic --> Logical
+  Atomic --> Character
+  
+  Vector --> List
+
+```
+
+ - There are complex and raw numeric type vectors, but we will not discuss them here.
+ - Lists are vectors too. We talk about them later.
+ - A **scalar** is a single value within a vector.
+ - You can print the type of a vector with `typeof()` and its length with `lenght()`
+ 
+```{r, results='hide'}
+# Examples of numeric scalars
+a <- 100L # integer: YOU MUST ADD L at the end (L = long integer, ask me why)
+b <- 3 # double!!
+c <- (a + b) / b # double
+d <- TRUE # logical
+e <- 'scalar' # character
+f <- "also scalar" #character
+
+letters <- c(a, b, c, d, e, f) # combine scalars with c(.) to create a vector
+double_letters <- c(letters, letters)
+more_letters <- c('a', 'b', 'c')
+numbers <- c(1, 2, 3, 4)
+
+
+typeof(e)
+# > "character"
+typeof(a)
+# > "integer"
+length(a)
+# > 1
+length(f)
+# > 1
+length(letters)
+# > 6
+```
+### Testing & Coercing
+
+- You can test if a vector is of a given type with a `is.*()` function:
+  - `is.integer()`, `is.logical()`, `is.double()`, and `is.character()` do what you expect.
+  - **!!! Avoid:** `is.vector()`, `is.atomic()`, and `is.numeric()` DO NOT test if you have a vector, atomic, or numeric:
+
+::: {#imp-atomic-tests .callout-important}
+- `is.atomic()` tests if an object is an atomic vector (as defined in Advanced R) or is NULL (!).
+- `is.numeric()` tests if an object has type integer or double and is not of class factor, Date, POSIXt or difftime.
+- `is.vector()` tests if an object is a vector (as defined in Advanced R) or an expression and has no attributes, apart from names.
+:::
+
+- Atomic vectors elements are always of the **same type**, if not --> they will be coerced.
+- You can also deliberately coerce with `as.*()` functions.
+- **Coercion hierarchy**:
+
+```{mermaid}
+flowchart LR
+  logical -->integer
+  integer --> double
+  double --> character
+  
+```
+
+```{r, results=F, warning=FALSE}
+str(c("a", 1)) # automatic coercion
+#>  chr [1:2] "a" "1"
+
+as.integer(c("1", "1.5", "a")) # deliberate coercion might not work -> NA
+#> Warning: NAs introduced by coercion
+#> [1]  1  1 NA
+```
+
+- The default type of `NA` is a logical object. This is so the presence of an `NA` will not affect the vector. The same hierarchy applies: `NA` (logical) -> `NA_integer_` -> `NA_real_` -> `NA_character_`.
+
+## Attributes
+- Think of attributes as metadata of your vector.
+::: {#imp-ephemeral .callout-important}
+- You can set attributes, but they are *ephemeral*, the vector will not keep them after operations -> if you want to preserve them -> S3 classes (!!).
+:::
+```{r, results=F}
+a <- 1:3 # a vector
+attr(a, "x") <- "abcdef" # setting an attribute
+attr(a, "x")
+#> [1] "abcdef"
+
+a <- structure( # setting an attribute as well
+  1:3, 
+  x = "abcdef", # more than 1 attribute!
+  y = 4:6
+)
+
+
+attributes(sum(a)) # if you sum a elements, attributes disappear.
+#> NULL
+```
+
+- There are 2 **non-ephemeral attributes**:
+  - **names**
+  - **dim**
+  
+### Names
+- Names are a character vector giving each element a name.
+- *Ideally* names should be unique and non-missing.If all names missing -> `NULL`
+```{r, results=F}
+# Can create in multiple ways, these are all equivalent
+x <- c(a = 1, b = 2, c = 3)
+
+x <- 1:3
+names(x) <- c("a", "b", "c")
+
+x <- setNames(1:3, c("a", "b", "c"))
+
+# can remove it too:
+names(x) <- NULL
+x <- unname(x)
+```
+
+### Dimensions, Matrix, Array
+- Dimensions literally give dimensions to your vector -> by setting them you can create `matrix` and `array` objects.
+- A vector without a dim attribute set is NOT 1-dimensional -> it has `NULL` dimensions.
+```{r, results=F}
+
+x <- matrix(1:6, 
+            nrow = 2, 
+            ncol = 3)
+x
+#>      [,1] [,2] [,3]
+#> [1,]    1    3    5
+#> [2,]    2    4    6
+
+
+y <- array(1:12, c(2, 3, 2))
+y
+#> , , 1
+#> 
+#>      [,1] [,2] [,3]
+#> [1,]    1    3    5
+#> [2,]    2    4    6
+#> 
+#> , , 2
+#> 
+#>      [,1] [,2] [,3]
+#> [1,]    7    9   11
+#> [2,]    8   10   12
+```
+
+::: {#imp-matrices .callout-important}
+- A `matrix` is not a `data.frame`, although they are both tabular data:
+  - A matrix in R must contain elements of the same data type, this is not true for a `data.frame`.
+  - They do share some common functions: `colnames()`, `rownames()`, `nrow`, `ncol`, `rbind`, `cbind`.
+:::
