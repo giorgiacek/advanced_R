@@ -69,6 +69,7 @@ length(letters)
   - **!!! Avoid:** `is.vector()`, `is.atomic()`, and `is.numeric()` DO NOT test if you have a vector, atomic, or numeric:
 
 ::: {#imp-atomic-tests .callout-important}
+#### Important Note 1
 - `is.atomic()` tests if an object is an atomic vector (as defined in Advanced R) or is NULL (!).
 - `is.numeric()` tests if an object has type integer or double and is not of class factor, Date, POSIXt or difftime.
 - `is.vector()` tests if an object is a vector (as defined in Advanced R) or an expression and has no attributes, apart from names.
@@ -100,6 +101,7 @@ as.integer(c("1", "1.5", "a")) # deliberate coercion might not work -> NA
 ## Attributes
 - Think of attributes as metadata of your vector.
 ::: {#imp-ephemeral .callout-important}
+#### Important Note 2
 - You can set attributes, but they are *ephemeral*, the vector will not keep them after operations -> if you want to preserve them -> S3 classes (!!).
 :::
 ```{r, results=F}
@@ -143,7 +145,8 @@ x <- unname(x)
 ### Dimensions, Matrix, Array
 - Dimensions literally give dimensions to your vector -> by setting them you can create `matrix` and `array` objects.
 - A vector without a dim attribute set is NOT 1-dimensional -> it has `NULL` dimensions.
-```{r, results=F}
+
+```{r, results='hide'}
 
 x <- matrix(1:6, 
             nrow = 2, 
@@ -170,7 +173,73 @@ y
 ```
 
 ::: {#imp-matrices .callout-important}
+#### Important Note 3
 - A `matrix` is not a `data.frame`, although they are both tabular data:
   - A matrix in R must contain elements of the same data type, this is not true for a `data.frame`.
   - They do share some common functions: `colnames()`, `rownames()`, `nrow`, `ncol`, `rbind`, `cbind`.
+  - `nrow()` != `NROW()` and `ncol()` != `NCOL()`
+
 :::
+
+
+## Class AKA S3 Vectors
+- **Note**: this is a short introduction to S3 vectors only. We will look into the S3 system in-depth later.
+- **An object with a class becomes an S3 object** -> the object will behave differently with generic functions.
+- There are 3 S3 vectors:
+
+```{mermaid}
+flowchart LR
+  Vector --> Atomic
+  Atomic --> Numeric
+  Numeric --> Integer
+  Integer -..-> factor
+  Numeric --> Double
+  Double -..-> Date
+  Double -..-> POSIXct
+  Double -..-> difftime
+```
+
+### Factors
+- Usually introduced to social scientists as 'categorical variables'.
+- A factor is a vector that can contain only predefined values (`levels`).
+- They are of `integer` type!!! -> NOT to be treated like a character!
+```{r, results='hide'}
+# 1. Create a factor, levels set automatically:
+x <- factor(c("a", "b", "b", "a"))
+x
+#> [1] a b b a
+#> Levels: a b
+
+# 2. Characteristics:
+typeof(x)
+#> [1] "integer"
+#> 
+attributes(x) # class and levels are attributes!
+#> $levels
+#> [1] "a" "b"
+#> 
+#> $class
+#> [1] "factor"
+
+# 3. They behave differently with generic functions:
+sex_char <- c("m", "m", "m")
+sex_factor <- factor(sex_char, levels = c("m", "f"))
+
+table(sex_char)
+#> sex_char
+#> m 
+#> 3
+table(sex_factor)
+#> sex_factor
+#> m f 
+#> 3 0 
+```
+
+::: {#imp-factors .callout-important}
+#### Important Note 4
+- Many base R functions (e.g. `read.csv()` and `data.frame()`) automatically convert character vectors to factors (not the `tidyverse`).
+- Use the argument `stringsAsFactors = FALSE` to suppress this behaviour.
+:::
+
+### Date, POSIXct, difftime
+- 
