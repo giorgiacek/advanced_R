@@ -19,15 +19,17 @@ flowchart LR
   Vector --> Atomic
   Atomic --> Numeric
   Numeric --> Integer
-  Integer -.-> factor
+  Integer -.-> Factor
   Numeric --> Double
-  Double --> Date
-  Double --> 
+  Double -.-> Date
+  Double -.-> Difftime
   
   Atomic --> Logical
   Atomic --> Character
   
   Vector --> List
+  List -.-> data.frame
+  data.frame -.-> data.table
 
 ```
 
@@ -242,4 +244,28 @@ table(sex_factor)
 :::
 
 ### Date, POSIXct, difftime
-- 
+- `Date` vectors are built on top of `double` vectors, their value = days since 1970-01-01.
+- `POSIXct` vectors are built on top of `double` vectors, their value = seconds since 1970-01-01.
+- `difftime` vectors are built on top of `double` vectors, their value = amount of time between pairs of dates or date-times.
+```{r}
+# 1. Date
+today <- Sys.Date()
+typeof(today)
+#> [1] "double"
+attributes(today)
+#> $class
+#> [1] "Date"
+
+# 2. POSIXct
+now_ct <- as.POSIXct("2018-08-01 22:00", 
+                     tz = "UTC") # time zone as an attribute
+now_ct
+#> [1] "2018-08-01 22:00:00 UTC"
+
+# 3. difftime
+one_week_1 <- as.difftime(1, 
+                          units = "weeks") # units as an attribute
+
+one_week_1
+#> Time difference of 1 weeks
+```

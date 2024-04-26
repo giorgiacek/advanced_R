@@ -95,6 +95,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#class-aka-s3-vectors" id="toc-class-aka-s3-vectors" class="nav-link" data-scroll-target="#class-aka-s3-vectors"><span class="header-section-number">3</span> Class AKA S3 Vectors</a>
   <ul class="collapse">
   <li><a href="#factors" id="toc-factors" class="nav-link" data-scroll-target="#factors"><span class="header-section-number">3.1</span> Factors</a></li>
+  <li><a href="#date-posixct-difftime" id="toc-date-posixct-difftime" class="nav-link" data-scroll-target="#date-posixct-difftime"><span class="header-section-number">3.2</span> Date, POSIXct, difftime</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -136,15 +137,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   Vector --&gt; Atomic
   Atomic --&gt; Numeric
   Numeric --&gt; Integer
-  Integer -.-&gt; factor
+  Integer -.-&gt; Factor
   Numeric --&gt; Double
-  Double --&gt; Date
-  Double --&gt; 
+  Double -.-&gt; Date
+  Double -.-&gt; Difftime
   
   Atomic --&gt; Logical
   Atomic --&gt; Character
   
   Vector --&gt; List
+  List -.-&gt; data.frame
+  data.frame -.-&gt; data.table
 
 </pre>
 </div>
@@ -426,6 +429,49 @@ Important&nbsp;3: Important Note 4
 <li>Use the argument <code>stringsAsFactors = FALSE</code> to suppress this behaviour.</li>
 </ul>
 </div>
+</div>
+</section>
+<section id="date-posixct-difftime" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="date-posixct-difftime"><span class="header-section-number">3.2</span> Date, POSIXct, difftime</h3>
+<ul>
+<li><code>Date</code> vectors are built on top of <code>double</code> vectors, their value = days since 1970-01-01.</li>
+<li><code>POSIXct</code> vectors are built on top of <code>double</code> vectors, their value = seconds since 1970-01-01.</li>
+<li><code>difftime</code> vectors are built on top of <code>double</code> vectors, their value = amount of time between pairs of dates or date-times.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Date</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>today <span class="ot">&lt;-</span> <span class="fu">Sys.Date</span>()</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(today)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "double"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "double"</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">attributes</span>(today)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$class
+[1] "Date"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $class</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Date"</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. POSIXct</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>now_ct <span class="ot">&lt;-</span> <span class="fu">as.POSIXct</span>(<span class="st">"2018-08-01 22:00"</span>, </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">tz =</span> <span class="st">"UTC"</span>) <span class="co"># time zone as an attribute</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>now_ct</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "2018-08-01 22:00:00 UTC"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "2018-08-01 22:00:00 UTC"</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. difftime</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>one_week_1 <span class="ot">&lt;-</span> <span class="fu">as.difftime</span>(<span class="dv">1</span>, </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">units =</span> <span class="st">"weeks"</span>) <span class="co"># units as an attribute</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>one_week_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time difference of 1 weeks</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Time difference of 1 weeks</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
