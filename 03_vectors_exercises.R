@@ -4,7 +4,7 @@
 
 
 # 0. Load packages ----
-library(lobstr)
+library(lobstr) # in case we need to check sizes etc
 
 
 # 1. Atomic Vectors ----
@@ -67,6 +67,19 @@ x == NA
 is.na(x)
 typeof(x)
 
+## 1.0.3 Testing ----
+x <- 1:3
+is.vector(x)
+
+attr(x, 'attribute_of_x') <- 'i am an attribute'
+is.vector(x)
+
+x <- NULL
+is.atomic(x) # !!!!! Not true for R 4.4.0.9000 , 4.4.0, 4.3.3
+
+
+
+
 
 ## 1.1 Question 1: Test vector coercion rules ----
 c(1, FALSE)      # will be coerced to ...
@@ -75,7 +88,18 @@ c(TRUE, 1L)      # will be coerced to ...
 
 ## 1.2 Question 2: What do you expect from running this and why? ----
 1 == "1"
+
+# compare with:
+identical(1, '1') # looks at entire definition of objects supplied!
+
+1:3 == '1'
+
+identical(1:3, '1')
+# Note: identical is not equivalent to ==, diff purpose and identical will
+# always be faster (returns one element).
+
 -1 < FALSE
+
 "one" < 2 # hint: lexicographic order!
 
 ## 1.3 Why is the default missing value, NA, a logical vector?
@@ -85,7 +109,7 @@ typeof(int_vector)
 int_vector <- c(1, NA_character_)
 typeof(int_vector)
 
-int_vector <- c(1, NaN) # it is not the same! But also coercion.
+int_vector <- c(1, NaN) # it is not the same! But also coercion following the hierarchy.
 typeof(int_vector)
 
 
@@ -107,16 +131,40 @@ a <- structure(
   y = 4:8 # can be longer!
 )
 
-attr(a)
+attr(a) # wrong
 attributes(a)
 attr(x = a, which = "names")
 attr(x = a, which = "x")
 
-## 2.1 Question 1:How is setNames()/unname implemented?
+## 2.1 Question 1:How is setNames()/unname implemented? ----
+# Already covered!
 
+setNames <- function(object = nm, nm) {
+  names(object) <- nm
+  object
+}
 
+# it is pipable!
 
+unname <- function(obj, force = FALSE) {
+  if (!is.null(names(obj)))
+    names(obj) <- NULL
+  if (!is.null(dimnames(obj)) && (force || !is.data.frame(obj))) # won't touch data.frames
+    dimnames(obj) <- NULL
+  obj
+}
 
+m1 <- matrix(1:12, nrow = 3)
+x <- 1:13
+names(x) <- 1:14
+
+names(m1) <- 1:12
+m1
+
+dimnames(m1) <- 1:12
+dimnames(m1) <- list(1:3, 1:4)
+
+attributes(m1)
 
 ## 2.2 Question 2: What does dim() return when applied to a 1-dimensional vector? ----
 # When might you use NROW() or NCOL()?
@@ -124,6 +172,7 @@ attr(x = a, which = "x")
 x <- 1:10
 nrow(x)
 ncol(x)
+dim(x)
 
 # Treats vector as a 1-column matrix, so what will it return?
 NROW(x)

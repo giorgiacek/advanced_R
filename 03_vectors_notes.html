@@ -147,7 +147,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="basics-recap" class="level3" data-number="2.1">
 <h3 data-number="2.1" class="anchored" data-anchor-id="basics-recap"><span class="header-section-number">2.1</span> Basics Recap</h3>
 <ul>
-<li>There are four types of atomic vectors:</li>
+<li>There are <strong>four types</strong> of atomic vectors:</li>
 </ul>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <ul>
-<li>There are complex and raw numeric type vectors, but we will not discuss them here.</li>
+<li>There are also complex and raw numeric type vectors, bit off topic for today.</li>
 <li>A <strong>scalar</strong> is a single value within a vector.</li>
 <li>You can print the type of a vector with <code>typeof()</code> and its length with <code>length()</code>.</li>
 </ul>
@@ -231,14 +231,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;1: Important Note 1
+Important&nbsp;1: Testing
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li><code>is.atomic()</code> tests if an object is an atomic vector (as defined in Advanced R) or is NULL (!).</li>
+<li><code>is.atomic()</code> tests if an object is an atomic vector (logical, integer, double, complex, character or raw) or is NULL (!).</li>
 <li><code>is.numeric()</code> tests if an object has type integer or double and is not of class factor, Date, POSIXt or difftime.</li>
-<li><code>is.vector()</code> tests if an object is a vector (as defined in Advanced R) or an expression and has no attributes, apart from names.</li>
+<li><code>is.vector()</code> tests if an object is a vector (logical, integer, double, complex, character or raw) or an expression and has no attributes, apart from names.</li>
 </ul>
 </div>
 </div>
@@ -289,7 +289,7 @@ Important&nbsp;1: Important Note 1
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;2: Important Note 2
+Important&nbsp;2: Ephemeral
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -341,6 +341,7 @@ Important&nbsp;2: Important Note 2
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(x) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">unname</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>-&gt; <em>Go tho Question 2.1</em></p>
 </section>
 <section id="dimensions" class="level3" data-number="3.2">
 <h3 data-number="3.2" class="anchored" data-anchor-id="dimensions"><span class="header-section-number">3.2</span> Dimensions</h3>
@@ -386,7 +387,7 @@ Important&nbsp;2: Important Note 2
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;3: Important Note 3
+Important&nbsp;3: Tabular
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -400,6 +401,43 @@ Important&nbsp;3: Important Note 3
 </ul>
 </div>
 </div>
+<p>Summary of vector -&gt; matrix -&gt; array functions:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Vector</th>
+<th>Matrix</th>
+<th>Array</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>names()</code></td>
+<td><code>rownames()</code>, <code>colnames()</code></td>
+<td><code>dimnames()</code></td>
+</tr>
+<tr class="even">
+<td><code>length()</code></td>
+<td><code>nrow()</code>, <code>ncol()</code></td>
+<td><code>dim()</code></td>
+</tr>
+<tr class="odd">
+<td><code>c()</code></td>
+<td><code>rbind()</code>, <code>cbind()</code></td>
+<td><code>abind::abind()</code></td>
+</tr>
+<tr class="even">
+<td>—</td>
+<td><code>t()</code></td>
+<td><code>aperm()</code></td>
+</tr>
+<tr class="odd">
+<td><code>is.null(dim(x))</code></td>
+<td><code>is.matrix()</code></td>
+<td><code>is.array()</code></td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 <section id="class-aka-s3-vectors" class="level2" data-number="4">
@@ -407,7 +445,7 @@ Important&nbsp;3: Important Note 3
 <ul>
 <li><strong>Note</strong>: this is a short introduction to S3 vectors only. We will look into the S3 system in-depth later.</li>
 <li><strong>An object with a class becomes an S3 object</strong> -&gt; the object will behave differently with generic functions.</li>
-<li>There are 3 S3 vectors:</li>
+<li>There are <strong>four S3 vectors</strong>:</li>
 </ul>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
@@ -423,6 +461,11 @@ Important&nbsp;3: Important Note 3
   Double -..-&gt; Date
   Double -..-&gt; POSIXct
   Double -..-&gt; difftime
+  
+  style factor fill:#f9f
+  style Date fill:#f9f
+  style difftime fill:#f9f
+  style POSIXct fill:#f9f
 </pre>
 </div>
 <p></p></figure><p></p>
@@ -473,7 +516,7 @@ Important&nbsp;3: Important Note 3
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;4: Important Note 4
+Important&nbsp;4: stringAsFactors
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -640,7 +683,7 @@ Important&nbsp;5
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;6: Important Note 5
+Important&nbsp;6: List columns
 </div>
 </div>
 <div class="callout-body-container callout-body">

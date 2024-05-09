@@ -89,7 +89,7 @@ c(c(1, 2), c(3, 4)) # the flattening rule!
   - **!!! Avoid:** `is.vector()`, `is.atomic()`, and `is.numeric()` DO NOT test if you have a vector, atomic, or numeric:
 
 ::: {#imp-atomic-tests .callout-important}
-#### Important Note 1
+#### Testing
 - `is.atomic()` tests if an object is an atomic vector (logical, integer, double, complex, character or raw) or is NULL (!).
 - `is.numeric()` tests if an object has type integer or double and is not of class factor, Date, POSIXt or difftime.
 - `is.vector()` tests if an object is a vector (logical, integer, double, complex, character or raw) or an expression and has no attributes, apart from names.
@@ -118,7 +118,7 @@ as.integer(c("1", "1.5", "a")) # deliberate coercion might not work -> NA
 - R represents missing, or unknown values, with special value: `NA` (short for not applicable).
 - The default type of `NA` is a logical object. This is so the presence of an `NA` will not affect the vector. The same hierarchy applies: `NA` (logical) -> `NA_integer_` -> `NA_real_` -> `NA_character_`.
 - `NA` != `NaN`.
-
+- Add discussion about double/single + stackoverflow examples: [https://stackoverflow.com/questions/6558921/difference-between-boolean-operators-and-and-between-and-in-r]
 
 -> *Go to Question 1.1, 1.2, 1.3*
 
@@ -126,7 +126,7 @@ as.integer(c("1", "1.5", "a")) # deliberate coercion might not work -> NA
 - Think of attributes as metadata of your vector.
 
 ::: {#imp-ephemeral .callout-important}
-#### Important Note 2
+#### Ephemeral
 - You can set attributes, but they are *ephemeral*, the vector will not keep them after operations -> if you want to preserve them -> S3 classes (!!).
 :::
 
@@ -170,6 +170,8 @@ names(x) <- NULL
 x <- unname(x)
 ```
 
+-> *Go tho Question 2.1*
+
 ### Dimensions
 - Dimensions literally give dimensions to your vector -> by setting them you can create `matrix` and `array` objects.
 - A vector without a dim attribute set is NOT 1-dimensional -> it has `NULL` dimensions.
@@ -209,7 +211,7 @@ z
 ```
 
 ::: {#imp-matrices .callout-important}
-#### Important Note 3
+#### Tabular
 - A `matrix` is not a `data.frame`, although they are both **tabular** data:
   - A matrix in R must contain elements of the same data type, this is not true for a data frame.
   - They do share some common functions: `colnames()`, `rownames()`, `nrow`, `ncol`, `rbind`, `cbind`.
@@ -217,11 +219,21 @@ z
 
 :::
 
+Summary of vector -> matrix -> array functions:
+
+| Vector            | Matrix                     | Array            |
+|-------------------|----------------------------|------------------|
+| `names()`         | `rownames()`, `colnames()` | `dimnames()`     |
+| `length()`        | `nrow()`, `ncol()`         | `dim()`          |
+| `c()`             | `rbind()`, `cbind()`       | `abind::abind()` |
+| ---               | `t()`                      | `aperm()`        |
+| `is.null(dim(x))` | `is.matrix()`              | `is.array()`     |
+
 
 ## Class AKA S3 Vectors
 - **Note**: this is a short introduction to S3 vectors only. We will look into the S3 system in-depth later.
 - **An object with a class becomes an S3 object** -> the object will behave differently with generic functions.
-- There are 3 S3 vectors:
+- There are **four S3 vectors**:
 
 ```{mermaid}
 flowchart LR
@@ -233,6 +245,11 @@ flowchart LR
   Double -..-> Date
   Double -..-> POSIXct
   Double -..-> difftime
+  
+  style factor fill:#f9f
+  style Date fill:#f9f
+  style difftime fill:#f9f
+  style POSIXct fill:#f9f
 ```
 
 ### Factors
@@ -272,7 +289,7 @@ table(sex_factor)
 ```
 
 ::: {#imp-factors .callout-important}
-#### Important Note 4
+#### stringAsFactors
 - Many base R functions (e.g. `read.csv()` and `data.frame()`) automatically convert character vectors to factors (not the `tidyverse`).
 - Use the argument `stringsAsFactors = FALSE` to suppress this behaviour.
 :::
@@ -398,9 +415,10 @@ tibble(x = 1:4, y = 1:2)
 
 ### List columns
 ::: {#imp-factors .callout-important}
-#### Important Note 5
+#### List columns
 A data frame can have a column that is a list and a list can contain any other object: this means you can put any object in a data frame.
 :::
+
 - List-columns need to be created with `I()` (see example) - a `tibble` on the other hand, will do that automatically (it's lazy).
 ```{r, results='hide'}
 df <- data.frame(x = 1:3)
