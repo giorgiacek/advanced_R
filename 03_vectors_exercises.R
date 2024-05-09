@@ -6,20 +6,117 @@
 # 0. Load packages ----
 library(lobstr)
 
-# 1. Atomic ----
+
+# 1. Atomic Vectors ----
+## 1.0 Additional Notes ----
+### 1.0.1 Character constants in R ----
+# Using double quotes
+print("Hello, world!")
+
+# Using single quotes
+print('Hello, world!')
+
+# Double quotes inside single quotes
+print('He said, "Hello, world!"')
+
+# Newline and tab (print vs concatenate and print, cat)
+print("Line 1\nLine 2")
+cat("Line 1\nLine 2")
+cat("Column1\tColumn2")
+
+# Backspace and bell
+cat("Wrong\b\b\bRight\a")
+
+# Unicode example
+print("\u03C0")  # Greek letter Pi
+
+# Octal and Hexadecimal representations (security, debugging,)
+cat("\141")  # Octal for 'a'
+cat("\x61")  # Hexadecimal for 'a'
+cat("\110\145\154\154\157\40\127\157\162\154\144\41")
+
+
+# Fun way to understand what the octal system is (and raw):
+octal_value <- "141"
+reversed_digits <- rev(strsplit(octal_value, "")[[1]])
+
+decimal_value <- sum(as.integer(reversed_digits) * 8^(seq_along(reversed_digits) - 1))
+
+decimal_value
+
+as.raw(decimal_value) # .... it's the hexadecimal!
+character_from_octal <- rawToChar(as.raw(decimal_value)) # raw data are by default represented in hex.
+
+character_from_octal
+
+## 1.0.2 Missingness propagation ----
+NA > 5
+10 * NA
+!NA
+
+# Exceptions when identity holds:
+NA ^ 0
+NA | TRUE
+NA & FALSE
+
+# !!!
+x <- c(NA, 5, NA, 10)
+x == NA
+is.na(x)
+typeof(x)
+
+
 ## 1.1 Question 1: Test vector coercion rules ----
 c(1, FALSE)      # will be coerced to ...
 c("a", 1)        # will be coerced to ...
 c(TRUE, 1L)      # will be coerced to ...
 
-## 1.2 Question 2: Why is 1 == "1" true? Why is -1 < FALSE true? Why is "one" < 2 false? ----
+## 1.2 Question 2: What do you expect from running this and why? ----
 1 == "1"
 -1 < FALSE
-"one" < 2
+"one" < 2 # hint: lexicographic order!
+
+## 1.3 Why is the default missing value, NA, a logical vector?
+int_vector <- c(1, NA)
+typeof(int_vector)
+
+int_vector <- c(1, NA_character_)
+typeof(int_vector)
+
+int_vector <- c(1, NaN) # it is not the same! But also coercion.
+typeof(int_vector)
 
 
 # 2. Attributes ----
-## 2.1 Question 1: What does dim() return when applied to a 1-dimensional vector? ----
+
+## 2.0 Additional Notes ----
+### 2.0.1 Setting Attributes ----
+attr(a, "x") <- "abcdef"
+
+a <- structure( # setting an attribute as well
+  1:3,
+  x = "abcdef", # more than 1 attribute!
+  y = 4:6
+)
+
+a <- structure(
+  1:3,
+  x = "abcdef",
+  y = 4:8 # can be longer!
+)
+
+attr(a)
+attributes(a)
+attr(x = a, which = "names")
+attr(x = a, which = "x")
+
+## 2.1 Question 1:How is setNames()/unname implemented?
+
+
+
+
+
+## 2.2 Question 2: What does dim() return when applied to a 1-dimensional vector? ----
 # When might you use NROW() or NCOL()?
 
 x <- 1:10

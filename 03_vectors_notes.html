@@ -82,26 +82,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#atomic-vectors" id="toc-atomic-vectors" class="nav-link active" data-scroll-target="#atomic-vectors"><span class="header-section-number">1</span> Atomic Vectors</a>
+  <li><a href="#vectors-overview" id="toc-vectors-overview" class="nav-link active" data-scroll-target="#vectors-overview"><span class="header-section-number">1</span> Vectors! Overview</a></li>
+  <li><a href="#atomic-vectors" id="toc-atomic-vectors" class="nav-link" data-scroll-target="#atomic-vectors"><span class="header-section-number">2</span> Atomic Vectors</a>
   <ul class="collapse">
-  <li><a href="#basics-recap" id="toc-basics-recap" class="nav-link" data-scroll-target="#basics-recap"><span class="header-section-number">1.1</span> Basics Recap</a></li>
-  <li><a href="#testing-coercing" id="toc-testing-coercing" class="nav-link" data-scroll-target="#testing-coercing"><span class="header-section-number">1.2</span> Testing &amp; Coercing</a></li>
+  <li><a href="#basics-recap" id="toc-basics-recap" class="nav-link" data-scroll-target="#basics-recap"><span class="header-section-number">2.1</span> Basics Recap</a></li>
+  <li><a href="#testing-coercing" id="toc-testing-coercing" class="nav-link" data-scroll-target="#testing-coercing"><span class="header-section-number">2.2</span> Testing &amp; Coercing</a></li>
   </ul></li>
-  <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes"><span class="header-section-number">2</span> Attributes</a>
+  <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes"><span class="header-section-number">3</span> Attributes</a>
   <ul class="collapse">
-  <li><a href="#names" id="toc-names" class="nav-link" data-scroll-target="#names"><span class="header-section-number">2.1</span> Names</a></li>
-  <li><a href="#dimensions-matrix-array" id="toc-dimensions-matrix-array" class="nav-link" data-scroll-target="#dimensions-matrix-array"><span class="header-section-number">2.2</span> Dimensions, Matrix, Array</a></li>
+  <li><a href="#names" id="toc-names" class="nav-link" data-scroll-target="#names"><span class="header-section-number">3.1</span> Names</a></li>
+  <li><a href="#dimensions" id="toc-dimensions" class="nav-link" data-scroll-target="#dimensions"><span class="header-section-number">3.2</span> Dimensions</a></li>
   </ul></li>
-  <li><a href="#class-aka-s3-vectors" id="toc-class-aka-s3-vectors" class="nav-link" data-scroll-target="#class-aka-s3-vectors"><span class="header-section-number">3</span> Class AKA S3 Vectors</a>
+  <li><a href="#class-aka-s3-vectors" id="toc-class-aka-s3-vectors" class="nav-link" data-scroll-target="#class-aka-s3-vectors"><span class="header-section-number">4</span> Class AKA S3 Vectors</a>
   <ul class="collapse">
-  <li><a href="#factors" id="toc-factors" class="nav-link" data-scroll-target="#factors"><span class="header-section-number">3.1</span> Factors</a></li>
-  <li><a href="#date-posixct-difftime" id="toc-date-posixct-difftime" class="nav-link" data-scroll-target="#date-posixct-difftime"><span class="header-section-number">3.2</span> Date, POSIXct, difftime</a></li>
+  <li><a href="#factors" id="toc-factors" class="nav-link" data-scroll-target="#factors"><span class="header-section-number">4.1</span> Factors</a></li>
+  <li><a href="#date-posixct-difftime" id="toc-date-posixct-difftime" class="nav-link" data-scroll-target="#date-posixct-difftime"><span class="header-section-number">4.2</span> Date, POSIXct, difftime</a></li>
   </ul></li>
-  <li><a href="#lists" id="toc-lists" class="nav-link" data-scroll-target="#lists"><span class="header-section-number">4</span> Lists</a></li>
-  <li><a href="#data.frames-and-tibbles-and-data.tables" id="toc-data.frames-and-tibbles-and-data.tables" class="nav-link" data-scroll-target="#data.frames-and-tibbles-and-data.tables"><span class="header-section-number">5</span> Data.frames and Tibbles (and data.tables)</a>
+  <li><a href="#lists" id="toc-lists" class="nav-link" data-scroll-target="#lists"><span class="header-section-number">5</span> Lists</a></li>
+  <li><a href="#data.frames-and-tibbles-and-data.tables" id="toc-data.frames-and-tibbles-and-data.tables" class="nav-link" data-scroll-target="#data.frames-and-tibbles-and-data.tables"><span class="header-section-number">6</span> Data.frames and Tibbles (and data.tables)</a>
   <ul class="collapse">
-  <li><a href="#list-columns" id="toc-list-columns" class="nav-link" data-scroll-target="#list-columns"><span class="header-section-number">5.1</span> List columns</a></li>
-  <li><a href="#matrix-and-data-frame" id="toc-matrix-and-data-frame" class="nav-link" data-scroll-target="#matrix-and-data-frame"><span class="header-section-number">5.2</span> Matrix and data frame</a></li>
+  <li><a href="#list-columns" id="toc-list-columns" class="nav-link" data-scroll-target="#list-columns"><span class="header-section-number">6.1</span> List columns</a></li>
+  <li><a href="#matrix-and-data-frame" id="toc-matrix-and-data-frame" class="nav-link" data-scroll-target="#matrix-and-data-frame"><span class="header-section-number">6.2</span> Matrix and data frame</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -127,10 +128,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="atomic-vectors" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="atomic-vectors"><span class="header-section-number">1</span> Atomic Vectors</h2>
-<section id="basics-recap" class="level3" data-number="1.1">
-<h3 data-number="1.1" class="anchored" data-anchor-id="basics-recap"><span class="header-section-number">1.1</span> Basics Recap</h3>
+<section id="vectors-overview" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="vectors-overview"><span class="header-section-number">1</span> Vectors! Overview</h2>
+<ul>
+<li>Atomic Vectors -&gt; all elements are the same.</li>
+<li>Generic Vectors or Lists -&gt; elements can differ.</li>
+<li>NULL -&gt; length zero vector.</li>
+<li>Vectors <em>can</em> have <strong>attributes</strong> aka metadata.</li>
+<li>Most important attributes:
+<ul>
+<li><em>dimension</em> -&gt; matrices and arrays.</li>
+<li><em>class</em> -&gt; S3 vectors.</li>
+</ul></li>
+</ul>
+</section>
+<section id="atomic-vectors" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="atomic-vectors"><span class="header-section-number">2</span> Atomic Vectors</h2>
+<section id="basics-recap" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="basics-recap"><span class="header-section-number">2.1</span> Basics Recap</h3>
 <ul>
 <li>There are four types of atomic vectors:</li>
 </ul>
@@ -154,7 +169,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   Vector --&gt; List
   List -.-&gt; data.frame
   data.frame -.-&gt; data.table
-
+  
+  style Logical fill:#f9f
+  style Integer fill:#f9f
+  style Double fill:#f9f
+  style Character fill:#f9f
 </pre>
 </div>
 <p></p></figure><p></p>
@@ -163,18 +182,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <ul>
 <li>There are complex and raw numeric type vectors, but we will not discuss them here.</li>
-<li>Lists are vectors too. We talk about them later.</li>
 <li>A <strong>scalar</strong> is a single value within a vector.</li>
-<li>You can print the type of a vector with <code>typeof()</code> and its length with <code>length()</code></li>
+<li>You can print the type of a vector with <code>typeof()</code> and its length with <code>length()</code>.</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Examples of numeric scalars</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">100</span>L <span class="co"># integer: YOU MUST ADD L at the end (L = long integer, ask me why)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">100</span>L <span class="co"># integer: YOU MUST ADD L at the end (L = long integer)</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="co"># double!!</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> (a <span class="sc">+</span> b) <span class="sc">/</span> b <span class="co"># double</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="cn">TRUE</span> <span class="co"># logical</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="cn">TRUE</span> <span class="co"># logical (also T)</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="st">'scalar'</span> <span class="co"># character</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="st">"also scalar"</span> <span class="co">#character</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="st">"also scalar"</span> <span class="co">#character and better, "" are preferred. </span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>letters <span class="ot">&lt;-</span> <span class="fu">c</span>(a, b, c, d, e, f) <span class="co"># combine scalars with c(.) to create a vector</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>double_letters <span class="ot">&lt;-</span> <span class="fu">c</span>(letters, letters)</span>
@@ -191,11 +209,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(f)</span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; 1</span></span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(letters)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; 6</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; 6</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>)) <span class="co"># the flattening rule!</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 3 4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>-&gt; <em>Go to Notes</em></p>
 </section>
-<section id="testing-coercing" class="level3" data-number="1.2">
-<h3 data-number="1.2" class="anchored" data-anchor-id="testing-coercing"><span class="header-section-number">1.2</span> Testing &amp; Coercing</h3>
+<section id="testing-coercing" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="testing-coercing"><span class="header-section-number">2.2</span> Testing &amp; Coercing</h3>
 <ul>
 <li>You can test if a vector is of a given type with a <code>is.*()</code> function:
 <ul>
@@ -221,9 +243,9 @@ Important&nbsp;1: Important Note 1
 </div>
 </div>
 <ul>
-<li>Atomic vectors elements are always of the <strong>same type</strong>, if not –&gt; they will be coerced.</li>
-<li>You can also deliberately coerce with <code>as.*()</code> functions.</li>
-<li><strong>Coercion hierarchy</strong>:</li>
+<li><p>Atomic vectors elements are always of the <strong>same type</strong>, if not –&gt; they will be coerced.</p></li>
+<li><p>You can also deliberately coerce with <code>as.*()</code> functions.</p></li>
+<li><p><strong>Coercion hierarchy</strong>:</p></li>
 </ul>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
@@ -234,7 +256,6 @@ Important&nbsp;1: Important Note 1
   logical --&gt;integer
   integer --&gt; double
   double --&gt; character
-  
 </pre>
 </div>
 <p></p></figure><p></p>
@@ -250,12 +271,15 @@ Important&nbsp;1: Important Note 1
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]  1  1 NA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
+<li>R represents missing, or unknown values, with special value: <code>NA</code> (short for not applicable).</li>
 <li>The default type of <code>NA</code> is a logical object. This is so the presence of an <code>NA</code> will not affect the vector. The same hierarchy applies: <code>NA</code> (logical) -&gt; <code>NA_integer_</code> -&gt; <code>NA_real_</code> -&gt; <code>NA_character_</code>.</li>
+<li><code>NA</code> != <code>NaN</code>.</li>
 </ul>
+<p>-&gt; <em>Go to Question 1.1, 1.2, 1.3</em></p>
 </section>
 </section>
-<section id="attributes" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="attributes"><span class="header-section-number">2</span> Attributes</h2>
+<section id="attributes" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="attributes"><span class="header-section-number">3</span> Attributes</h2>
 <ul>
 <li>Think of attributes as metadata of your vector.</li>
 </ul>
@@ -290,6 +314,7 @@ Important&nbsp;2: Important Note 2
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">attributes</span>(<span class="fu">sum</span>(a)) <span class="co"># if you sum a elements, attributes disappear.</span></span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>-&gt; <em>Go to Notes</em></p>
 <ul>
 <li>There are 2 <strong>non-ephemeral attributes</strong>:
 <ul>
@@ -297,11 +322,11 @@ Important&nbsp;2: Important Note 2
 <li><strong>dim</strong></li>
 </ul></li>
 </ul>
-<section id="names" class="level3" data-number="2.1">
-<h3 data-number="2.1" class="anchored" data-anchor-id="names"><span class="header-section-number">2.1</span> Names</h3>
+<section id="names" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="names"><span class="header-section-number">3.1</span> Names</h3>
 <ul>
 <li>Names are a character vector giving each element a name.</li>
-<li><em>Ideally</em> names should be unique and non-missing.If all names missing -&gt; <code>NULL</code></li>
+<li><em>Ideally</em> names should be unique and non-missing. If all names missing -&gt; <code>NULL</code></li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Can create in multiple ways, these are all equivalent</span></span>
@@ -317,8 +342,8 @@ Important&nbsp;2: Important Note 2
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">unname</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="dimensions-matrix-array" class="level3" data-number="2.2">
-<h3 data-number="2.2" class="anchored" data-anchor-id="dimensions-matrix-array"><span class="header-section-number">2.2</span> Dimensions, Matrix, Array</h3>
+<section id="dimensions" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="dimensions"><span class="header-section-number">3.2</span> Dimensions</h3>
 <ul>
 <li>Dimensions literally give dimensions to your vector -&gt; by setting them you can create <code>matrix</code> and <code>array</code> objects.</li>
 <li>A vector without a dim attribute set is NOT 1-dimensional -&gt; it has <code>NULL</code> dimensions.</li>
@@ -345,7 +370,15 @@ Important&nbsp;2: Important Note 2
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2] [,3]</span></span>
 <span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1,]    7    9   11</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2,]    8   10   12</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2,]    8   10   12</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(z) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>z</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2]</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1,]    1    4</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2,]    2    5</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3,]    3    6</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="imp-matrices" class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -358,19 +391,19 @@ Important&nbsp;3: Important Note 3
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>A <code>matrix</code> is not a <code>data.frame</code>, although they are both tabular data:
+<li>A <code>matrix</code> is not a <code>data.frame</code>, although they are both <strong>tabular</strong> data:
 <ul>
-<li>A matrix in R must contain elements of the same data type, this is not true for a <code>data.frame</code>.</li>
+<li>A matrix in R must contain elements of the same data type, this is not true for a data frame.</li>
 <li>They do share some common functions: <code>colnames()</code>, <code>rownames()</code>, <code>nrow</code>, <code>ncol</code>, <code>rbind</code>, <code>cbind</code>.</li>
-<li><code>nrow()</code> != <code>NROW()</code> and <code>ncol()</code> != <code>NCOL()</code></li>
+<li>Note: <code>nrow()</code> != <code>NROW()</code> and <code>ncol()</code> != <code>NCOL()</code>.</li>
 </ul></li>
 </ul>
 </div>
 </div>
 </section>
 </section>
-<section id="class-aka-s3-vectors" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="class-aka-s3-vectors"><span class="header-section-number">3</span> Class AKA S3 Vectors</h2>
+<section id="class-aka-s3-vectors" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="class-aka-s3-vectors"><span class="header-section-number">4</span> Class AKA S3 Vectors</h2>
 <ul>
 <li><strong>Note</strong>: this is a short introduction to S3 vectors only. We will look into the S3 system in-depth later.</li>
 <li><strong>An object with a class becomes an S3 object</strong> -&gt; the object will behave differently with generic functions.</li>
@@ -396,8 +429,8 @@ Important&nbsp;3: Important Note 3
 </div>
 </div>
 </div>
-<section id="factors" class="level3" data-number="3.1">
-<h3 data-number="3.1" class="anchored" data-anchor-id="factors"><span class="header-section-number">3.1</span> Factors</h3>
+<section id="factors" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="factors"><span class="header-section-number">4.1</span> Factors</h3>
 <ul>
 <li>Usually introduced to social scientists as ‘categorical variables’.</li>
 <li>A factor is a vector that can contain only predefined values (<code>levels</code>).</li>
@@ -451,8 +484,8 @@ Important&nbsp;4: Important Note 4
 </div>
 </div>
 </section>
-<section id="date-posixct-difftime" class="level3" data-number="3.2">
-<h3 data-number="3.2" class="anchored" data-anchor-id="date-posixct-difftime"><span class="header-section-number">3.2</span> Date, POSIXct, difftime</h3>
+<section id="date-posixct-difftime" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="date-posixct-difftime"><span class="header-section-number">4.2</span> Date, POSIXct, difftime</h3>
 <ul>
 <li><code>Date</code> vectors are built on top of <code>double</code> vectors, their value = days since 1970-01-01.</li>
 <li><code>POSIXct</code> vectors are built on top of <code>double</code> vectors, their value = seconds since 1970-01-01.</li>
@@ -482,8 +515,8 @@ Important&nbsp;4: Important Note 4
 </div>
 </section>
 </section>
-<section id="lists" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="lists"><span class="header-section-number">4</span> Lists</h2>
+<section id="lists" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="lists"><span class="header-section-number">5</span> Lists</h2>
 <ul>
 <li>More complex, each element of a list can be of a different type.</li>
 </ul>
@@ -547,8 +580,8 @@ Important&nbsp;5
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>unlisted <span class="ot">&lt;-</span> <span class="fu">unlist</span>(list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="data.frames-and-tibbles-and-data.tables" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="data.frames-and-tibbles-and-data.tables"><span class="header-section-number">5</span> Data.frames and Tibbles (and data.tables)</h2>
+<section id="data.frames-and-tibbles-and-data.tables" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="data.frames-and-tibbles-and-data.tables"><span class="header-section-number">6</span> Data.frames and Tibbles (and data.tables)</h2>
 <ul>
 <li>They are S3 vectors built on top of lists.</li>
 <li>A data frame is <strong>a named list of vectors</strong> with attributes for (column) names, (row) row.names, and its class, “data.frame”.</li>
@@ -599,8 +632,8 @@ Important&nbsp;5
 <span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; * Size 2: Column `y`.</span></span>
 <span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Only values of size one are recycled.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="list-columns" class="level3" data-number="5.1">
-<h3 data-number="5.1" class="anchored" data-anchor-id="list-columns"><span class="header-section-number">5.1</span> List columns</h3>
+<section id="list-columns" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="list-columns"><span class="header-section-number">6.1</span> List columns</h3>
 <div id="imp-factors" class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -662,8 +695,8 @@ Important&nbsp;6: Important Note 5
 <li>They simplify management of hierarchical data and could be efficient for storing data but it is harder to debug.</li>
 </ul>
 </section>
-<section id="matrix-and-data-frame" class="level3" data-number="5.2">
-<h3 data-number="5.2" class="anchored" data-anchor-id="matrix-and-data-frame"><span class="header-section-number">5.2</span> Matrix and data frame</h3>
+<section id="matrix-and-data-frame" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="matrix-and-data-frame"><span class="header-section-number">6.2</span> Matrix and data frame</h3>
 <ul>
 <li>You can have a matrix/array as a column of a data.frame too, but the matrix needs to have the same number of rows (<code>NROW()</code>)</li>
 <li>You need to use <code>I()</code> or add it after creation.</li>
