@@ -18,6 +18,8 @@ print('Hello, world!')
 
 # Double quotes inside single quotes
 print('He said, "Hello, world!"')
+cat('He said, "Hello, world!"')
+print("He said, 'Hello, world!'")
 
 # Newline and tab (print vs concatenate and print, cat)
 print("Line 1\nLine 2")
