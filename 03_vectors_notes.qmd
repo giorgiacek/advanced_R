@@ -118,7 +118,7 @@ as.integer(c("1", "1.5", "a")) # deliberate coercion might not work -> NA
 - R represents missing, or unknown values, with special value: `NA` (short for not applicable).
 - The default type of `NA` is a logical object. This is so the presence of an `NA` will not affect the vector. The same hierarchy applies: `NA` (logical) -> `NA_integer_` -> `NA_real_` -> `NA_character_`.
 - `NA` != `NaN`.
-- Add discussion about double/single + stackoverflow examples: [https://stackoverflow.com/questions/6558921/difference-between-boolean-operators-and-and-between-and-in-r]
+- **TO DO**: Add discussion about double/single + stackoverflow examples: [https://stackoverflow.com/questions/6558921/difference-between-boolean-operators-and-and-between-and-in-r]
 
 -> *Go to Question 1.1, 1.2, 1.3*
 
@@ -127,7 +127,7 @@ as.integer(c("1", "1.5", "a")) # deliberate coercion might not work -> NA
 
 ::: {#imp-ephemeral .callout-important}
 #### Ephemeral
-- You can set attributes, but they are *ephemeral*, the vector will not keep them after operations -> if you want to preserve them -> S3 classes (!!).
+- You can set attributes, but they are *ephemeral*, the vector will not keep them after most operations -> if you want to preserve them -> S3 classes (!!).
 :::
 
 ```{r, results='hide'}
@@ -149,9 +149,10 @@ attributes(sum(a)) # if you sum a elements, attributes disappear.
 
 -> *Go to Notes*
 
-- There are 2 **non-ephemeral attributes**:
-  - **names**
-  - **dim**
+- There are 2 **non-ephemeral attributes** :
+  - **names**: `names()`
+  - **dimensions**: `dim()`
+
   
 ### Names
 - Names are a character vector giving each element a name.

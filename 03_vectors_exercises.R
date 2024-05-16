@@ -117,7 +117,29 @@ typeof(int_vector)
 
 ## 2.0 Additional Notes ----
 ### 2.0.1 Setting Attributes ----
-attr(a, "x") <- "abcdef"
+a <- 1:4
+attr(a, "x") <- "abcd"
+attr(a) # wrong!
+attributes(a) # right!
+
+names(a) <- "abcd" # check the difference between names and other attributes!
+a
+names(a) <- letters[1:4]
+a
+
+attr(x = a, which = "names")
+attr(x = a, which = "x")
+
+
+sum_of_a <- sum(a)
+attributes(sum_of_a)
+
+a_x_2 <- a * 2
+attributes(a_x_2)
+
+
+attributes(a[1])
+
 
 a <- structure( # setting an attribute as well
   1:3,
@@ -131,10 +153,8 @@ a <- structure(
   y = 4:8 # can be longer!
 )
 
-attr(a) # wrong
-attributes(a)
-attr(x = a, which = "names")
-attr(x = a, which = "x")
+
+
 
 ## 2.1 Question 1:How is setNames()/unname implemented? ----
 # Already covered!
