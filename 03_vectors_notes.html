@@ -274,6 +274,7 @@ Important&nbsp;1: Testing
 <li>R represents missing, or unknown values, with special value: <code>NA</code> (short for not applicable).</li>
 <li>The default type of <code>NA</code> is a logical object. This is so the presence of an <code>NA</code> will not affect the vector. The same hierarchy applies: <code>NA</code> (logical) -&gt; <code>NA_integer_</code> -&gt; <code>NA_real_</code> -&gt; <code>NA_character_</code>.</li>
 <li><code>NA</code> != <code>NaN</code>.</li>
+<li><strong>TO DO</strong>: Add discussion about double/single + stackoverflow examples: [https://stackoverflow.com/questions/6558921/difference-between-boolean-operators-and-and-between-and-in-r]</li>
 </ul>
 <p>-&gt; <em>Go to Question 1.1, 1.2, 1.3</em></p>
 </section>
@@ -294,7 +295,7 @@ Important&nbsp;2: Ephemeral
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>You can set attributes, but they are <em>ephemeral</em>, the vector will not keep them after operations -&gt; if you want to preserve them -&gt; S3 classes (!!).</li>
+<li>You can set attributes, but they are <em>ephemeral</em>, the vector will not keep them after most operations -&gt; if you want to preserve them -&gt; S3 classes (!!).</li>
 </ul>
 </div>
 </div>
@@ -316,10 +317,10 @@ Important&nbsp;2: Ephemeral
 </div>
 <p>-&gt; <em>Go to Notes</em></p>
 <ul>
-<li>There are 2 <strong>non-ephemeral attributes</strong>:
+<li>There are 2 <strong>non-ephemeral attributes</strong> :
 <ul>
-<li><strong>names</strong></li>
-<li><strong>dim</strong></li>
+<li><strong>names</strong>: <code>names()</code></li>
+<li><strong>dimensions</strong>: <code>dim()</code></li>
 </ul></li>
 </ul>
 <section id="names" class="level3" data-number="3.1">
