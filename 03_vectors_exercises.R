@@ -63,9 +63,13 @@ NA & FALSE
 
 # !!!
 x <- c(NA, 5, NA, 10)
-x == NA
-is.na(x)
+x == NA # very important! : checks whether each element of x is the same of NA
+is.na(x) # here you are vectorizing an evaluation/check, is the obj NA?
 typeof(x)
+
+NA == NA
+
+x <- c(NA_character_, 1, 2)
 
 ## 1.0.3 Testing ----
 x <- 1:3
@@ -136,7 +140,8 @@ attributes(sum_of_a)
 
 a_x_2 <- a * 2
 attributes(a_x_2)
-
+# rule: if vector change of size then attribute disappear
+# we can think of names as 'functional' attributes.
 
 attributes(a[1])
 
@@ -153,7 +158,7 @@ a <- structure(
   y = 4:8 # can be longer!
 )
 
-
+attributes(a)$y # it works like a list!!
 
 
 ## 2.1 Question 1:How is setNames()/unname implemented? ----
@@ -174,6 +179,9 @@ unname <- function(obj, force = FALSE) {
   obj
 }
 
+setNames()
+
+
 m1 <- matrix(1:12, nrow = 3)
 x <- 1:13
 names(x) <- 1:14
@@ -185,6 +193,9 @@ dimnames(m1) <- 1:12
 dimnames(m1) <- list(1:3, 1:4)
 
 attributes(m1)
+
+dimnames(m1) <- list(letters[1:3], letters[1:4])
+m1[a]
 
 ## 2.2 Question 2: What does dim() return when applied to a 1-dimensional vector? ----
 # When might you use NROW() or NCOL()?
@@ -217,6 +228,12 @@ str(x) # more useful this way
 x[ , , 1]
 
 x[ , , 2]
+
+# Differences when table using char vs factor
+sex_char <- c("m", "m", "m")
+sex_factor <- factor(sex_char, levels = c("m", "f"))
+table(sex_char)
+table(sex_factor)
 
 ## 3.2 Question 2 Does Table count NAs? ----
 d <- factor(rep(c("A","B","C"), 10), levels = c("A","B","C","D","E"))
@@ -251,42 +268,86 @@ list_coerce <- as.list(1:3) # are these the same? Why? Why not?
 
 ## 5.2 Question 2: List all the ways that a list differs from an atomic vector ----
 
-# 1. vectors are homogeneous/ lists are not
-# 2. vectors have one reference, lists have multiple references
+# 1. vectors are homogeneous/ lists are not.
+# 2. vectors have one reference, lists have multiple references (in memory).
 
-lobstr::ref(1:2)
+lobstr::ref(1:2) # vector
 
-lobstr::ref(list(1:2, 2))
+lobstr::ref(list(1:2, 2)) # list (question why is 1:2 int?)
+
+typeof(list(1:2, 2)[2])
+typeof(list(1:2, 2)[[2]])
+
+lobstr::ref(list(list(1:3), list(1:3)))
+
+# Note: Again this does not mean that the size increases much:
+lobstr::obj_size(1:2)
+lobstr::obj_size(list(1:2))
+
 
 # 3. Subsetting with out-of-bounds and NA values leads to different output.
 
-# Subsetting atomic vectors
-(1:2)[3]
+# 3.1 Subsetting out of bounds:
+(1:2)[3] # NA! x1
+list(1:2)[3] # NULL!
+as.list(1:2)[3] # NULL!
 
-(1:2)[NA]
+
+# 3.2 Subsetting with NAs:
+(1:2)[NA] # NA! x2
+## NA as an index is considered an indeterminate position,
+## and thus the corresponding value is also indeterminate (NA).
+length((1:2)[1])
+length((1:2)[NA])
+typeof((1:2)[NA])
+
+list(1:2)[NA] # NULL! x1
+length(list(1:2)[NA])
 
 
-# Subsetting lists
-as.list(1:2)[3]
+as.list(1:2)[NA] # NULL! x2
+length(as.list(1:2)[NA])
 
-as.list(1:2)[NA]
+# 3.3 Additional exercise:
+## 3.3.1 named list
+v <- 4:6
+l <- list(a = 4, b = 5, c = 6)
+v[5]
+l[5] # note that you get <NA> in the names too.
 
-list(1:2)[3]
+### 3.3.2
+v[NA] # logical! -> recycled
+v[NA_integer_] # integer -> just an index
+l[NA]
+l[NA_integer_]
+
+# There is much much much more on accessing lists vs vectors. NOT TODAY! (subsetting chapter)
 
 ## 5.3 Question 3: Why do you need to use unlist() to convert a list to an atomic vector? ----
 
 list1 <- list(1:3)
 is.vector(as.vector(list1))
-typeof(as.vector(list1))
+typeof(as.vector(list1)) # it is a list!!
+
+# A list is already a vector, so as.vector does not do much!
+# Compare:
+str(as.vector(list1))
+str(unlist(list1))
 
 
+# Example with dataframes:
 is.vector(as.vector(mtcars))
 typeof(as.vector(mtcars))
+str(as.vector(mtcars))
 
 typeof(unlist(mtcars))
 str(unlist(mtcars))
 
-# 6. Data.frames, Tibbles, data.tables ----
+# Point is: as.vector() will NOT flatten your lists/df,
+# and list and df are complex vectors anyway!
+
+
+# 6. Data.frames, (Tibbles, data.tables..) ----
 ## 6.1 What is a data.frame? What are its attributes? ----
 df1 <- data.frame(x = 1:3, y = letters[1:3])
 typeof(df1)

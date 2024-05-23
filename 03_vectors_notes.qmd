@@ -323,27 +323,21 @@ one_week_1
 ```
 
 ## Lists
-- More complex, each element of a list can be of a different type.
+- Complex vectors, each element of a list can be of a different type. 
+- In fact, all elements of a list a references only (so actually the same type..)
 
 ::: {#imp-list .callout-important}
-- In fact, **each element of a list is only a reference** -> lists are smaller in size than you might think. 
-- This is also how they differ from vectors:
+- In fact, **each element of a list is only a reference** -> lists are smaller in size than you might think.
+- Recap:
   - vectors -> multiple elements -> one reference
-  - lists -> multiple elements -> multiple references.\
+  - lists -> multiple elements -> multiple references.
 
 :::
 
-- Lists as **recursive** vectors -> can be nested.
-```{mermaid}
-flowchart LR
-  Vector --> List
-  List -.-> data.frame
-  data.frame -.-> data.table
-
-```
+- Lists can be thought as **recursive** vectors -> they can be nested.
 
 ```{r, results='hide'}
-l1 <- list( # different typeof elements
+l1 <- list( # different type of elements
   1:3, 
   "a", 
   c(TRUE, FALSE, TRUE), 
@@ -356,15 +350,79 @@ str(l1)
 #>  $ : chr "a"
 #>  $ : logi [1:3] TRUE FALSE TRUE
 #>  $ : num [1:2] 2.3 5.9
+#>  
 
-list <- list(1:3)
-list_coerce <- as.list(1:3) # are these the same?
-unlisted <- unlist(list)
+# list vs c():
+l4 <- list(list(1, 2), c(3, 4))
+l5 <- c(list(1, 2), c(3, 4))
+str(l4)
+#> List of 2
+#>  $ :List of 2
+#>   ..$ : num 1
+#>   ..$ : num 2
+#>  $ : num [1:2] 3 4
+str(l5)
+#> List of 4
+#>  $ : num 1
+#>  $ : num 2
+#>  $ : num 3
+#>  $ : num 4
+
+# Coercion:
+list(1:3)
+#> [[1]]
+#> [1] 1 2 3
+as.list(1:3)
+#> [[1]]
+#> [1] 1
+#> 
+#> [[2]]
+#> [1] 2
+#> 
+#> [[3]]
+#> [1] 3
 ```
+
+
+### Esoteric topic: Matrices, Arrays and Lists
+- Vectors: dimension attribute will create matrices.
+- Lists: dimension attribute will create list-matrices or list-arrays.
+
+```{r, results='hide'}
+l <- list(1:3, "a", TRUE, 1.0)
+dim(l) <- c(2, 2)
+l
+#>      [,1]      [,2]
+#> [1,] Integer,3 TRUE
+#> [2,] "a"       1
+
+l[[1, 1]]
+#> [1] 1 2 3
+
+```
+
+
+**Quick recap before moving on:**:
+```{mermaid}
+flowchart LR
+  vector --> List
+  list -.-> data.frame
+  data.frame -.-> data.table
+  data.frame -.-> tibble
+
+```
+
+- Lists are vectors with a structure.
+- Data frames are a class of lists with attributes ('S3 vectors built on top of lists').
+- Data tables and tibbles are data frames with additional attributes.
+
 
 ## Data.frames and Tibbles (and data.tables)
 - They are S3 vectors built on top of lists.
-- A data frame is **a named list of vectors** with attributes for (column) names, (row) row.names, and its class, “data.frame”.
+- A data frame is **a named list of vectors** with attributes:
+  - for columns: *names*, 
+  - for rows: *row.names*, 
+  - and a class: “data.frame”.
 - You create a data frame by supplying name-vector pairs to `data.frame()`.
 
 ```{r, results='hide'}
