@@ -7,6 +7,7 @@
 library(lobstr) # in case we need to check sizes etc
 
 
+
 # 1. Atomic Vectors ----
 ## 1.0 Additional Notes ----
 ### 1.0.1 Character constants in R ----
@@ -117,6 +118,7 @@ int_vector <- c(1, NaN) # it is not the same! But also coercion following the hi
 typeof(int_vector)
 
 
+
 # 2. Attributes ----
 
 ## 2.0 Additional Notes ----
@@ -210,6 +212,7 @@ NROW(x)
 NCOL(x)
 
 
+
 # 3. Simple S3 vectors ----
 ## 3.1 Question 1: What sort of object does table() return? ----
 # What is its type? What attributes does it have?
@@ -246,6 +249,7 @@ table(d, useNA = "ifany")
 table(d)
 
 
+
 # 4. Complex S3 vectors ----
 ## 4.1 Question 1: What happens to a factor when you modify its levels? ----
 f1 <- factor(letters)
@@ -260,11 +264,13 @@ f2 <- rev(factor(letters))
 f3 <- factor(letters, levels = rev(letters))
 
 
+
+
 # 5. Lists ----
 
 ## 5.1 Question 1 ----
 list <- list(1:3)
-list_coerce <- as.list(1:3) # are these the same? Why? Why not?
+list_coerce <- as.list(1:3)
 
 ## 5.2 Question 2: List all the ways that a list differs from an atomic vector ----
 
@@ -281,8 +287,9 @@ typeof(list(1:2, 2)[[2]])
 lobstr::ref(list(list(1:3), list(1:3)))
 
 # Note: Again this does not mean that the size increases much:
-lobstr::obj_size(1:2)
-lobstr::obj_size(list(1:2))
+lobstr::obj_size(c(1:1000))
+lobstr::obj_size(list(c(1:1000)))
+
 
 
 # 3. Subsetting with out-of-bounds and NA values leads to different output.
@@ -291,6 +298,9 @@ lobstr::obj_size(list(1:2))
 (1:2)[3] # NA! x1
 list(1:2)[3] # NULL!
 as.list(1:2)[3] # NULL!
+
+list(1, 2)[3]
+list(1, 2)[[3]]
 
 
 # 3.2 Subsetting with NAs:
@@ -301,7 +311,8 @@ length((1:2)[1])
 length((1:2)[NA])
 typeof((1:2)[NA])
 
-list(1:2)[NA] # NULL! x1
+list(1:2)[[NA]] # NULL! x1
+list(1:2)[NA]
 length(list(1:2)[NA])
 
 
@@ -326,8 +337,11 @@ l[NA_integer_]
 ## 5.3 Question 3: Why do you need to use unlist() to convert a list to an atomic vector? ----
 
 list1 <- list(1:3)
+is.atomic(as.vector(list1))
 is.vector(as.vector(list1))
 typeof(as.vector(list1)) # it is a list!!
+
+
 
 # A list is already a vector, so as.vector does not do much!
 # Compare:
@@ -340,14 +354,101 @@ is.vector(as.vector(mtcars))
 typeof(as.vector(mtcars))
 str(as.vector(mtcars))
 
+identical(list(1:3), as.vector(list(1:3)))
+
 typeof(unlist(mtcars))
 str(unlist(mtcars))
 
 # Point is: as.vector() will NOT flatten your lists/df,
 # and list and df are complex vectors anyway!
 
+# unlist very tricky function!
 
-# 6. Data.frames, (Tibbles, data.tables..) ----
+
+## 5.4 Compare and contrast c() and unlist() when combining a date and date-time into a single vector.----
+date    <- as.Date("1970-01-02") # number of days since the reference date 1970-01-01.
+dttm_ct <- as.POSIXct("1970-01-01 01:00",
+                      tz = "UTC") # in seconds.
+
+# we can see it like that:
+unclass(date)
+unclass(dttm_ct)
+
+str(date)
+str(dttm_ct)
+attributes(date)
+attributes(dttm_ct)
+
+# Output in R version 3.6.2
+c(date, dttm_ct)  # also equal to c.Date(date, dttm_ct)
+#> [1] "1970-01-02" "1979-11-10" -> considered days!
+c(dttm_ct, date)  # also equal to c.POSIXct(date, dttm_ct)
+#> [1] "1970-01-01 02:00:00 CET" "1970-01-01 01:00:01 CET" -> considered seconds!
+
+
+sloop::s3_dispatch(c(dttm_ct, date)) # Thank you Zander!!!
+
+# Point 2: c() will strip dttm_ct of the attribute but not the class:
+c(date, dttm_ct)
+attributes(c(date, dttm_ct))
+class(c(date, dttm_ct))
+
+# unlist() will strip dttm_ct of attributes AND class:
+list(date, dttm_ct)
+unlist(list(date, dttm_ct))
+attributes(unlist(list(date, dttm_ct)))
+class(unlist(list(date, dttm_ct))) # numeric!
+
+# This will NOT happen when you list them:
+class(list(date, dttm_ct)[[1]]) # not stripped
+class(unlist(list(date, dttm_ct))[[2]]) # stripped
+
+typeof(12.4)
+class(12.4)
+# Additional notes on dates
+dates <- seq(as.Date("2020-01-01"), by = "month", length.out = 3)
+str(dates)
+
+sloop::s3_dispatch(typeof(12.4))
+
+
+
+## 5.5 Additional note:
+# differences between c(), list(), append()
+x <- list(a = "1",
+          b = as.list(1:3))
+y <- list(z = "Hola",
+          w = 1:4)
+
+
+# different ways to combine lists
+# 1. c()
+c(x, y)
+
+# 2. append()
+append(x, y)
+
+
+# 3. list
+list(x, y)
+
+
+lobstr::obj_size((1:3))
+lobstr::obj_size(list((1:3)))
+
+lobstr::ref(as.list(1:3))
+
+# 4. unlist()
+unlist(list(x, y))
+
+
+# 5. c() with do.call()
+do.call(c, list(x, y))
+
+
+
+
+# 6. Data.frames and Tibbles ----
 ## 6.1 What is a data.frame? What are its attributes? ----
 df1 <- data.frame(x = 1:3, y = letters[1:3])
 typeof(df1)

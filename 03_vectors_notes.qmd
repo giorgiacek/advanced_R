@@ -474,7 +474,6 @@ tibble(x = 1:4, y = 1:2)
 
 ### List columns
 ::: {#imp-factors .callout-important}
-#### List columns
 A data frame can have a column that is a list and a list can contain any other object: this means you can put any object in a data frame.
 :::
 
@@ -523,7 +522,7 @@ dt[, list_col := list(list(c(1, 2, 3)),
 - Within the `tidyverse`, list-columns are created with `nest()`.
 - They simplify management of hierarchical data and could be efficient for storing data but it is harder to debug. 
 
-### Matrix and data frame
+### Esoteric topic: Matrix and data frame
 - You can have a matrix/array as a column of a data.frame too, but the matrix needs to have the same number of rows (`NROW()`)
 - You need to use `I()` or add it after creation.
 
