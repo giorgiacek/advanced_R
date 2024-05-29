@@ -472,6 +472,20 @@ tibble(x = 1:4, y = 1:2)
 
 ```
 
+- Data frames can have row names, which need to be unique, tibbles do not take row names.
+- Row names arise naturally if you think of data frames as 2D structures like matrices.
+- But Advanced R suggests that they are undesirable.
+
+:::{#imp-factors .callout-important}
+**Why row names are undesirable:**
+
+- No reason to store row names in a different way than other variables. Metadata is data.
+- They only work when a row can be identified by a single string (and not for instance, a number).
+- Row names must be unique, so any duplication of rows (e.g. from bootstrapping) will create new row names
+
+:::
+
+
 ### List columns
 ::: {#imp-factors .callout-important}
 A data frame can have a column that is a list and a list can contain any other object: this means you can put any object in a data frame.

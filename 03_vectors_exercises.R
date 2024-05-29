@@ -449,69 +449,233 @@ do.call(c, list(x, y))
 
 
 # 6. Data.frames and Tibbles ----
-## 6.1 What is a data.frame? What are its attributes? ----
-df1 <- data.frame(x = 1:3, y = letters[1:3])
-typeof(df1)
-attributes(df1)
+## 1. Creating ----
+### 1.1 What is a data.frame? What are its attributes? ----
+df1 <- data.frame(x = 1:3,
+                  y = letters[1:3])
+typeof(df1) # it is still a list
+attributes(df1) # with specific attributes (names, class, row.names)
 
-## 6.2 What is a tibble? What are its attributes? ----
+### 1.2 (Addition) What is a tibble? What are its attributes? ----
 library(tibble)
-tb1 <- tibble(x = 1:3, y = letters[1:3])
-typeof(tb1)  # "list"
-attributes(tb1)
+tb1 <- tibble(x = 1:3,
+              y = letters[1:3])
+typeof(tb1)  # still a list
+attributes(tb1) # different attributes values (class =! class df)
 
 
-## 6.3 What is a data.table? What are its attributes? ----
+identical(tb1, df1) # FALSE
+all.equal(tb1, df1) # highlights differences in attributes
+
+
+### 1.3 (Addition) What is a data.table? What are its attributes? ----
 library(data.table)
-dt1 <- data.table(x = 1:3, y = letters[1:3])
+dt1 <- data.table(x = 1:3,
+                  y = letters[1:3])
 typeof(dt1)  # "list"
-attributes(dt1)
+attributes(dt1) # $.internal.selfref!
 
-## 6.4 What is the difference between colnames() and names()? ----
+identical(dt1, df1) # FALSE
+all.equal(dt1, df1)
+all.equal(dt1, tb1)
 
-data.frame(a = integer(), b = logical())
-#> [1] a b
-#> <0 rows> (or 0-length row.names)
 
-data.frame(row.names = 1:3)  # or data.frame()[1:3, ]
-#> data frame with 0 columns and 3 rows
+### 1.4 stringAsFactors() ----
+df2 <- data.frame(x = 1:3,
+                  y = c("a", "b", "c"))
 
-data.frame()
-#> data frame with 0 columns and 0 rows
+typeof(df2$y)
+str(df2)
+# I think that I have a default to stringAsFactors = FALSE?
+# tibbles will NOT coerce to factors.
 
-## 6.5 Can you have a data frame with zero rows? What about zero columns? ----
+str(tb1)
+
+### 1.5 non-syntactic names
+data.frame(`1` = 1,
+           x = "a") # 1 will be converted to a names which can be used
+
+tibble(`1` = 1,
+        x = "a") # not with lazy tibbles
+
+data.table(`1` = 1,
+           x = "a") # or with data.tables!
+
+### 1.6 Recycling shorter inputs ----
+# Quite different behaviour actually!
+data.frame(x = 1:4,
+           y = 1:2) # shorter input, but multiple of x
+data.frame(x = 1:4,
+           y = 1:3) # not multiple of x
+
+tibble(x = 1:4,
+       y = 1) # size 1 ok
+
+tibble(x = 1:4,
+       y = 1:2) # not ok!
+
+data.table(x = 1:4,
+           y = 1:2) # dt is actually okay with multiples as well
+
+data.table(x = 1:4,
+           y = 1:3) # AND WITH NOT MULTIPLES (with remainder)
+
+### 1.7 In-itinere ----
+data.frame(x = 2,
+           y = x*2) # nope!
+
+tibble(x = 2,
+       y = x*2) # yep!
+
+data.table(x = 2,
+           y = x *2) # nope!
+
+
+## 2. Row names ----
+df3 <- data.frame(
+  age = c(35, 27, 18),
+  hair = c("blond", "brown", "black"),
+  row.names = c("Bob", "Susan", "Sam") # special! needs to contain unique names
+)
+
+df3
+
+df4 <- data.frame(
+  age = c(35, 27, 18),
+  hair = c("blond", "brown", "black"),
+  row.names = c("Bob", "Bob", "Sam") # you get an error otherwise!
+)
+
+# you can then retrieve them:
+rownames(df3)
+# and you can subset:
+df3["Bob", ]
+
+# Row names are undesirable though, good example:
+df3[1,] # If we want to duplicate this row
+df3[c(1, 1, 1), ] # the names will change
+
+dt3 <- data.table(age = c(35, 27, 18),
+                  hair = c("blond", "brown", "black"),
+                  row.names = c("Bob", "Susan", "Sam")) # you just get a variable called row.names!
+
+rownames(dt3) # the rownames are actually 1, 2, 3
+
+row.names(df3) <- c("a", "b", "c") # works
+row.names(dt3) <- c("a", "b", "c") # does not work
+
+
+# so tibbles will not have rownames:
+as_tibble(df3)
+as_tibble(df3, rownames = "name")
+
+## 3. Subsetting ----
+# you can subset a data frame or a tibble like a 1D structure (where it behaves like a list),
+# or a 2D structure (where it behaves like a matrix).
+
+
+df3$age # list-like will return a vector (not dataframe)
+df3[1:2, c("age", "hair")] # matrix-like will return dataframe (for two columns only!)
+
+
+# Undesirable 1: type
+one_var <- "age"
+two_vars <- c("age", "hair")
+
+
+df3[,two_vars]
+df3[,one_var, drop=FALSE] # you need drop = FALSE
+
+tb3 <- as_tibble(df3)
+tb3[,one_var] # returns tibble
+
+dt3 <- as.data.table(df3)
+dt3[ , one_var] # small reminder that this does not work
+dt3[ , ..one_var] # but this returns a data.table
+
+
+# Undesirable 2: partial matching
+df3$x
+df3$a # !!! it takes age
+
+
+tb3$a # does not do anything
+dt3$a # IT HAS THE SAME ISSUE BE CAREFUL!! VERY SCARY STUFF
+
+
+## 4. List Columns ----
+df3$list_col <- list(1:3, 1:4, 1:5) # needs to have 3 elements in it
+
+
+data.frame(x = 1:3,
+           list_col = list(1:3, 1:4, 1:5)) # NOPE! This won't work
+
+data.frame(x = 1:3,
+           list_col = I(list(1:3, 1:4, 1:5))) # You need this!
+
+# Also what do you expect here?
+data.frame(x = 1:3,
+           list_col = list(1,2,3))
+
+# But you can do it in a tibble:
+tibble(x = 1:3,
+       y = list(1:2, 1:3, 1:4))
+
+tibble(x = 1:3,
+       list_col = list(1,2,3)) # will work just fine and place it in a list
+
+
+
+## 5.Questions ----
+### 1 Can you have a data frame with zero rows? What about zero columns? ----
+# Yes you can create them subsetting:
 ### data.frames
 mtcars[0, ]
 
-
 mtcars[ , 0]
-
 
 mtcars[0, 0]
 
 ### data.tables
 mtcarsdt<-mtcars
-setDT(mtcarsdt)
+setDT(mtcarsdt) # setting as reference
 
 mtcarsdt[ , 0]
 mtcarsdt[0, ]
 
+### tibbles
+mtcarstb <- as_tibble(mtcars)
+mtcarstb[0, ]
+
+# Or when creating them
+data.frame( x = logical(),
+            y = integer())
+
+data.table( x = logical(),
+            y = integer())
+
+tibble(x = logical(),
+       y = integer())
+
+
+# also, you can create an empty dataframe but with given row number:
+data.frame()[1:3, ]
 
 
 ## 6.6 What happens if you attempt to set rownames that are not unique? ----
-data.frame(row.names = c("x", "y", "y"))
+data.frame(row.names = c("x", "y", "y")) # Error
 
 
 df <- data.frame(x = 1:3)
-row.names(df) <- c("x", "y", "y")
+row.names(df) <- c("x", "y", "y") # Error again
 
-
+# as we saw before, if you subset and repeat the same item, it will deduplicate the rownames
 row.names(df) <- c("x", "y", "z")
 df[c(1, 1, 1), , drop = FALSE]
 
 
 ## 6.7  If df is a data frame, what can you say about t(df), and t(t(df))? ----
-# Note t() is for transpose of a matrix
+# Note t() is for transpose of a matrix.
 
 df <- data.frame(x = 1:3, # different types!
                  y = letters[1:3])
@@ -528,6 +692,8 @@ dim(df)
 dim(t(df))
 
 dim(t(t(df)))
+
+
 
 
 
