@@ -495,11 +495,16 @@ str(tb1)
 data.frame(`1` = 1,
            x = "a") # 1 will be converted to a names which can be used
 
+# internally is using make.names()
+make.names("?1") # Careful!
+make.names("!")
+
 tibble(`1` = 1,
         x = "a") # not with lazy tibbles
 
 data.table(`1` = 1,
            x = "a") # or with data.tables!
+
 
 ### 1.6 Recycling shorter inputs ----
 # Quite different behaviour actually!
@@ -518,7 +523,8 @@ data.table(x = 1:4,
            y = 1:2) # dt is actually okay with multiples as well
 
 data.table(x = 1:4,
-           y = 1:3) # AND WITH NOT MULTIPLES (with remainder)
+           y = 1:3) # AND WITH NOT MULTIPLES (with remainder) VERY BAD NO GOOD
+
 
 ### 1.7 In-itinere ----
 data.frame(x = 2,
@@ -555,6 +561,30 @@ df3["Bob", ]
 df3[1,] # If we want to duplicate this row
 df3[c(1, 1, 1), ] # the names will change
 
+df3 <- data.frame( x = 1:3,
+                   y = 1:3)
+
+df3[c(1,1,1), ]
+
+data.frame(x = 1:5,
+           x = 2:6)
+
+df <- data.frame(x = 1:4,
+                 row.names = c("a", "b", "c", "d"))
+rbind(df,df) |> attributes()
+library(collapse)
+rowbind(df,df) |> attributes()
+rbindlist(list(df, df)) |> attributes()
+
+
+
+
+tb3 <- tibble(age = c(35, 27, 18),
+              hair = c("blond", "brown", "black"),
+              row.names = c("Bob", "Susan", "Sam")) # you just get a variable called row.names!
+
+
+
 dt3 <- data.table(age = c(35, 27, 18),
                   hair = c("blond", "brown", "black"),
                   row.names = c("Bob", "Susan", "Sam")) # you just get a variable called row.names!
@@ -573,7 +603,6 @@ as_tibble(df3, rownames = "name")
 # you can subset a data frame or a tibble like a 1D structure (where it behaves like a list),
 # or a 2D structure (where it behaves like a matrix).
 
-
 df3$age # list-like will return a vector (not dataframe)
 df3[1:2, c("age", "hair")] # matrix-like will return dataframe (for two columns only!)
 
@@ -584,6 +613,7 @@ two_vars <- c("age", "hair")
 
 
 df3[,two_vars]
+df3[,one_var,]
 df3[,one_var, drop=FALSE] # you need drop = FALSE
 
 tb3 <- as_tibble(df3)
@@ -591,17 +621,30 @@ tb3[,one_var] # returns tibble
 
 dt3 <- as.data.table(df3)
 dt3[ , one_var] # small reminder that this does not work
-dt3[ , ..one_var] # but this returns a data.table
+dt3[ , ..one_var] # but this returns a data.table (also this is different froms subsetting, diff environment)
+dt3[, age] # but look at this, very different behaviours! -> vector
+dt3[, "age"] # -> data.table (standard evaluation)
+
+age <- "hair"
+dt3[, ..age]
+
+dt3[, c(age, hair)] # not stand eval! -> vector
+dt3[, c("age", "hair")]
+dt3[, .(age, hair)] # dot == list not c()! . works in stand eval
+
 
 
 # Undesirable 2: partial matching
 df3$x
 df3$a # !!! it takes age
+df3$age2 <- df3$age^2
 
 
 tb3$a # does not do anything
 dt3$a # IT HAS THE SAME ISSUE BE CAREFUL!! VERY SCARY STUFF
 
+dt3$age2 <- dt3$age^2 # DONT DO IT, WORK WITH DATA.TABLE SYNTAX !!!
+dt3$a # no partial matching
 
 ## 4. List Columns ----
 df3$list_col <- list(1:3, 1:4, 1:5) # needs to have 3 elements in it
@@ -626,6 +669,24 @@ tibble(x = 1:3,
 
 
 
+# additional notes
+dv <- c(1:5)
+names(dv) <- letters[1:5]
+
+a <- "e"
+dv[a]
+
+# how would you run dv[a] but getting all of the vector back?
+tool <- c("a", "b")
+dv[tool]
+
+tool <- names(dv)
+tool <- rep(TRUE, length(dv))
+dv[tool]
+
+
+
+
 ## 5.Questions ----
 ### 1 Can you have a data frame with zero rows? What about zero columns? ----
 # Yes you can create them subsetting:
@@ -647,7 +708,8 @@ mtcarsdt[0, ]
 mtcarstb <- as_tibble(mtcars)
 mtcarstb[0, ]
 
-# Or when creating them
+# Or when creating them:
+# VERY USEFUL
 data.frame( x = logical(),
             y = integer())
 
@@ -662,6 +724,10 @@ tibble(x = logical(),
 data.frame()[1:3, ]
 
 
+vec <- letters[1:15]
+vec
+
+
 ## 6.6 What happens if you attempt to set rownames that are not unique? ----
 data.frame(row.names = c("x", "y", "y")) # Error
 
@@ -671,7 +737,7 @@ row.names(df) <- c("x", "y", "y") # Error again
 
 # as we saw before, if you subset and repeat the same item, it will deduplicate the rownames
 row.names(df) <- c("x", "y", "z")
-df[c(1, 1, 1), , drop = FALSE]
+df[c(1, 1, 1), , drop=FALSE]
 
 
 ## 6.7  If df is a data frame, what can you say about t(df), and t(t(df))? ----
@@ -712,3 +778,48 @@ as.matrix(df_coltypes)
 data.matrix(df_coltypes)
 # it always follows the hierarchy!
 
+
+# Compairison of rbindlist(), rowbind, rbind:
+library(microbenchmark)
+
+df1 <- data.frame(x = 1:500000,
+                  y = 2:6)
+df2 <- data.frame(x = 11:150000,
+                  y = 12:16)
+benchmark <- microbenchmark:::microbenchmark(
+  times = 100,
+  # Test 1
+  "rbindlist" = {
+    data.table::rbindlist(list(df1, df2))
+  },
+  # Test 2
+  "rowbind" = {
+    # write some more code
+    collapse::rowbind(df1, df2)
+  },
+  # Test 3
+  "rbind" = {
+    # write some more code
+    rbind(df1, df2)
+  }
+)
+
+if (requireNamespace("highcharter")) {
+  hc_bench <- highcharter::data_to_boxplot(benchmark,
+                                           time,
+                                           expr,
+                                           add_outliers = FALSE,
+                                           name = "Benchmark Efficiency"
+  )
+  highcharter::highchart() |>
+    highcharter::hc_xAxis(type = "category") |>
+    highcharter::hc_chart(inverted=TRUE) |>
+    highcharter::hc_add_series_list(hc_bench)
+} else {
+  boxplot(benchmark, outline = FALSE)
+}
+
+
+dtt <- data.table::rbindlist(list(df1, df2))
+dtc <- collapse::rowbind(df1, df2)
+dtb <- rbind(df1, df2)
