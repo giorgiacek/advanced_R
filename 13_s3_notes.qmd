@@ -1,0 +1,25 @@
+---
+title: "Chapter 13: S3 - Notes"
+format: 
+  html:
+    number-sections: true
+    theme: sandstone
+    code-fold: false
+    toc: true
+    link-external-newwindow: true
+---
+
+# S3 Overview
+
+-   S3 is R’s first and simplest OO system (This means there are other OO systems).
+-   OO system = object-oriented system. An object-oriented system is a software development model that uses objects to represent different aspects of the application.
+-   Since S3 has few built-in constraints -\> you should build the "constraints" yourself -\> for example making sure that the input is numeric if you need it to be numeric.
+
+# Classes
+
+Advanced R recommends that when you want to work with your own class you create:
+
+-   A low-level **constructor**, `new_myclass()`: creates new objects with the correct structure.
+-   A **validator**, `validate_myclass()`: performs more computationally expensive checks to ensure that the object has correct values.
+-   A user-level **helper**, `myclass()`: provides a convenient way for others to create objects of your class.
+
